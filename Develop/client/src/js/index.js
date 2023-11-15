@@ -23,6 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load content from IndexedDB on page load
   loadContent();
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  }
 });
 
 async function saveContent(content) {
@@ -32,6 +44,15 @@ async function saveContent(content) {
   const id = await store.put(content);
 
   console.log(`Content saved with ID: ${id}`);
+
+  // Send content to the server
+  await fetch('/api/save', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ content }),
+  });
 }
 
 async function loadContent() {
@@ -42,4 +63,9 @@ async function loadContent() {
 
   const latestContent = content[content.length - 1] || '';
   document.getElementById('editor').value = latestContent;
+
+  // Load content from the server
+  const response = await fetch('/api/load');
+  const data = await response.json();
+  console.log('Content loaded from the server:', data.content);
 }
