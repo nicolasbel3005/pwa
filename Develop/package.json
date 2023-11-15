@@ -1,18 +1,36 @@
 {
-  "name": "your-project-name",
+  "name": "JATE",
   "version": "1.0.0",
-  "description": "Your project description",
+  "description": "text editor",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "heroku-postbuild": "webpack --config Develop/webpack.config.js --mode production"
-    // ... other scripts
+    "heroku-postbuild": "webpack --config Develop/webpack.config.js --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+    // ... other scripts as needed
   },
   "dependencies": {
-    // ... your dependencies
+    "express": "^4.17.1",    // Example backend dependency
+    "body-parser": "^1.19.0" // Another example backend dependency
+    // ... other backend dependencies
   },
   "devDependencies": {
-    // ... your devDependencies
-  }
+    "webpack": "^5.62.0",              // Example development dependency
+    "webpack-cli": "^4.9.0",           // Another example development dependency
+    "webpack-dev-server": "^4.7.0",    // Development server for webpack
+    "idb": "^6.1.1",                   // IndexedDB package
+    // ... other development dependencies
+  },
+  "engines": {
+    "node": ">=14.0.0"  // Update with your required Node.js version
+  },
+  "browserslist": [
+    "> 0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "license": "MIT",
+  "private": true
   // ... other configurations
 }
