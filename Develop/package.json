@@ -1,25 +1,18 @@
 {
-  "name": "JATE",
+  "name": "your-project-name",
   "version": "1.0.0",
-  "description": "",
+  "description": "Your project description",
   "main": "server.js",
   "scripts": {
-    "start:dev": "",
-    "start": "",
-    "server": "",
-    "build": "",
-    "install": "",
-    "client": ""
+    "start": "node server.js",
+    "heroku-postbuild": "webpack --config Develop/webpack.config.js --mode production"
+    // ... other scripts
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "if-env": "^1.0.4"
+    // ... your dependencies
   },
   "devDependencies": {
-    "concurrently": "^5.2.0",
-    "nodemon": "^2.0.4"
+    // ... your devDependencies
   }
+  // ... other configurations
 }
