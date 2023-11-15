@@ -1,33 +1,45 @@
-import { Workbox } from 'workbox-window';
-import Editor from './editor';
-import './database';
-import '../css/style.css';
+// index.js
+import { openDB } from 'idb';
 
-const main = document.querySelector('#main');
-main.innerHTML = '';
+const dbPromise = openDB('text-editor-db', 1, {
+  upgrade(db) {
+    db.createObjectStore('notes', { autoIncrement: true });
+  },
+});
 
-const loadSpinner = () => {
-  const spinner = document.createElement('div');
-  spinner.classList.add('spinner');
-  spinner.innerHTML = `
-  <div class="loading-container">
-  <div class="loading-spinner" />
-  </div>
-  `;
-  main.appendChild(spinner);
-};
+document.addEventListener('DOMContentLoaded', () => {
+  const editor = document.getElementById('editor');
+  const saveBtn = document.getElementById('save-btn');
+  const loadBtn = document.getElementById('load-btn');
 
-const editor = new Editor();
+  saveBtn.addEventListener('click', () => {
+    const content = editor.value;
+    saveContent(content);
+  });
 
-if (typeof editor === 'undefined') {
-  loadSpinner();
+  loadBtn.addEventListener('click', () => {
+    loadContent();
+  });
+
+  // Load content from IndexedDB on page load
+  loadContent();
+});
+
+async function saveContent(content) {
+  const db = await dbPromise;
+  const tx = db.transaction('notes', 'readwrite');
+  const store = tx.objectStore('notes');
+  const id = await store.put(content);
+
+  console.log(`Content saved with ID: ${id}`);
 }
 
-// Check if service workers are supported
-if ('serviceWorker' in navigator) {
-  // register workbox service worker
-  const workboxSW = new Workbox('/src-sw.js');
-  workboxSW.register();
-} else {
-  console.error('Service workers are not supported in this browser.');
+async function loadContent() {
+  const db = await dbPromise;
+  const tx = db.transaction('notes', 'readonly');
+  const store = tx.objectStore('notes');
+  const content = await store.getAll();
+
+  const latestContent = content[content.length - 1] || '';
+  document.getElementById('editor').value = latestContent;
 }
